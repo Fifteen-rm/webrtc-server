@@ -6,8 +6,16 @@ var twilio = require('twilio')(
   process.env.TWILIO_AUTH_TOKEN
 );
 var express = require('express');
+const fs = require('fs');
 var app = express();
-var http = require('http').createServer(app);
+
+const options = {
+  key: fs.readFileSync('./keys/private.pem'),
+  cert: fs.readFileSync('./keys/public.pem')
+};
+
+
+var http = require('http').createServer(options, app);
 var io = require('socket.io')(http);
 
 app.use(express.static('public'));
@@ -66,6 +74,7 @@ io.on('connection', function(socket){
   });
 });
 
-http.listen(3000, function() {
-  console.log('listening on *:3000');
+
+http.listen(11001, function() {
+  console.log('listening on *:11001');
 });
